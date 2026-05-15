@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculadora Xunzel Pro - Gema</title>
+    <link href="https://fonts.googleapis.com/css2?family=Urbanist:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        :root { --primary: #bef264; --bg: #020617; --card: #1e293b; --text: #f8fafc; --accent: #65a30d; }
+        body { font-family: 'Urbanist', sans-serif; background: var(--bg); color: var(--text); margin: 0; padding: 10px; display: flex; justify-content: center; }
+        .container { max-width: 600px; width: 100%; background: #0f172a; padding: 20px; border-radius: 25px; box-shadow: 0 20px 50px rgba(0,0,0,0.5); }
+        h1 { color: var(--primary); text-align: center; font-size: 1.8rem; margin-bottom: 5px; }
+        .subtitle { text-align: center; color: #94a3b8; font-size: 0.9rem; margin-bottom: 20px; }
+        
+        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+        .item { background: var(--card); padding: 15px; border-radius: 18px; border: 1px solid #334155; cursor: pointer; transition: 0.2s; position: relative; }
+        .item.active { border-color: var(--primary); background: #2d3a4f; transform: scale(0.98); }
+        .item i { font-size: 1.5rem; color: var(--primary); margin-bottom: 8px; display: block; }
+        .item h3 { margin: 0; font-size: 1rem; color: #fff; }
+        .item p { font-size: 0.75rem; color: #94a3b8; margin: 3px 0 0 0; }
+
+        .result-box { margin-top: 25px; padding: 20px; background: #111827; border-radius: 20px; border: 2px solid #334155; text-align: center; }
+        .total-label { font-size: 0.9rem; color: #94a3b8; text-transform: uppercase; letter-spacing: 1px; }
+        .total-watts { font-size: 2.2rem; font-weight: bold; color: var(--primary); margin: 5px 0; }
+        
+        .pack-card { background: var(--accent); color: #020617; padding: 15px; border-radius: 15px; margin-top: 15px; font-weight: bold; }
+        .pack-name { font-size: 1.4rem; display: block; }
+        .pack-desc { font-size: 0.9rem; opacity: 0.9; }
+
+        .btn-reset { width: 100%; padding: 15px; margin-top: 15px; background: #334155; color: white; border: none; border-radius: 15px; font-weight: bold; cursor: pointer; font-family: inherit; }
+        .btn-reset:active { background: #475569; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Xunzel <span>Expert</span></h1>
+        <p class="subtitle">Calculadora de Potencia Simultánea</p>
+        
+        <div class="grid">
+            <div class="item" onclick="toggle(this, 10, 'Luz LED (x5)')"><i class="fa-solid fa-lightbulb"></i><h3>Luces LED</h3><p>50W total</p></div>
+            <div class="item" onclick="toggle(this, 100, 'Televisión')"><i class="fa-solid fa-tv"></i><h3>Televisión</h3><p>100W</p></div>
+            <div class="item" onclick="toggle(this, 150, 'Nevera')"><i class="fa-solid fa-snowflake"></i><h3>Frigorífico</h3><p>150W (Continuo)</p></div>
+            <div class="item" onclick="toggle(this, 1000, 'Bomba Agua')"><i class="fa-solid fa-faucet"></i><h3>Bomba Agua</h3><p>1000W</p></div>
+            <div class="item" onclick="toggle(this, 2200, 'Lavadora')"><i class="fa-solid fa-tshirt"></i><h3>Lavadora</h3><p>2200W</p></div>
+            <div class="item" onclick="toggle(this, 1500, 'Aire Ac.')"><i class="fa-solid fa-wind"></i><h3>Aire Cond.</h3><p>1500W</p></div>
+            <div class="item" onclick="toggle(this, 1200, 'Microondas')"><i class="fa-solid fa-cookie"></i><h3>Microondas</h3><p>1200W</p></div>
+            <div class="item" onclick="toggle(this, 2500, 'Horno/Vitro')"><i class="fa-solid fa-fire-burner"></i><h3>Horno/Vitro</h3><p>2500W</p></div>
+            <div class="item" onclick="toggle(this, 800, 'Piscina')"><i class="fa-solid fa-person-swimming"></i><h3>Depuradora</h3><p>800W</p></div>
+            <div class="item" onclick="toggle(this, 65, 'Laptop')"><i class="fa-solid fa-laptop"></i><h3>Laptop/Móvil</h3><p>65W</p></div>
+        </div>
+
+        <div class="result-box">
+            <div class="total-label">Potencia en Uso</div>
+            <div class="total-watts" id="totalW">0 W</div>
+            <div id="packResult">
+                <p style="color: #64748b;">Selecciona equipos para calcular el "Grifo"</p>
+            </div>
+        </div>
+
+        <button class="btn-reset" onclick="reset()">REINICIAR CÁLCULO</button>
+    </div>
+
+    <script>
+        let currentW = 0;
+        function toggle(el, watts) {
+            el.classList.toggle('active');
+            if (el.classList.contains('active')) currentW += watts;
+            else currentW -= watts;
+            update();
+        }
+
+        function reset() {
+            currentW = 0;
+            document.querySelectorAll('.item').forEach(i => i.classList.remove('active'));
+            update();
+        }
+
+        function update() {
+            document.getElementById('totalW').innerText = currentW + " W";
+            const res = document.getElementById('packResult');
+            let pack = "";
+            let desc = "";
+
+            if (currentW === 0) {
+                res.innerHTML = '<p style="color: #64748b;">Selecciona equipos para calcular el "Grifo"</p>';
+                return;
+            }
+
+            if (currentW <= 400) { pack = "AX10L / AX19L"; desc = "Ideal para iluminación y ocio básico."; }
+            else if (currentW <= 1000) { pack = "AX30L"; desc = "Perfecto para pequeñas herramientas o batidoras."; }
+            else if (currentW <= 3000) { pack = "AX70 / AX170"; desc = "Hogar estándar (Nevera + Lavadora en frío)."; }
+            else if (currentW <= 5000) { pack = "AX270L / AX370L"; desc = "Vivienda completa con gran consumo diurno."; }
+            else if (currentW <= 7200) { pack = "AX490L / AX590"; desc = "Independencia total (Piscina, Aire y Cocina)."; }
+            else { pack = "SISTEMA A MEDIDA"; desc = "Exceso de potencia simultánea para packs estándar."; }
+
+            res.innerHTML = `
+                <div class="pack-card">
+                    <span class="pack-name">${pack}</span>
+                    <span class="pack-desc">${desc}</span>
+                </div>
+            `;
+        }
+    </script>
+</body>
+</html>
