@@ -24,9 +24,10 @@
         .total-label { font-size: 0.9rem; color: #94a3b8; text-transform: uppercase; letter-spacing: 1px; }
         .total-watts { font-size: 2.2rem; font-weight: bold; color: var(--primary); margin: 5px 0; }
         
-        .pack-card { background: var(--accent); color: #020617; padding: 15px; border-radius: 15px; margin-top: 15px; font-weight: bold; }
-        .pack-name { font-size: 1.4rem; display: block; }
-        .pack-desc { font-size: 0.9rem; opacity: 0.9; }
+        .pack-card { background: var(--accent); color: #020617; padding: 15px; border-radius: 15px; margin-top: 15px; font-weight: bold; text-align: left; }
+        .pack-name { font-size: 1.2rem; display: block; margin-bottom: 5px; }
+        .pack-info { font-size: 0.85rem; display: block; line-height: 1.4; border-top: 1px solid rgba(0,0,0,0.1); pt: 5px; margin-top: 5px; }
+        .pack-desc { font-size: 0.8rem; opacity: 0.9; font-weight: normal; font-style: italic; display: block; margin-top: 5px; }
 
         .btn-reset { width: 100%; padding: 15px; margin-top: 15px; background: #334155; color: white; border: none; border-radius: 15px; font-weight: bold; cursor: pointer; font-family: inherit; }
         .btn-reset:active { background: #475569; }
@@ -38,16 +39,16 @@
         <p class="subtitle">Calculadora de Potencia Simultánea</p>
         
         <div class="grid">
-            <div class="item" onclick="toggle(this, 10, 'Luz LED (x5)')"><i class="fa-solid fa-lightbulb"></i><h3>Luces LED</h3><p>50W total</p></div>
-            <div class="item" onclick="toggle(this, 100, 'Televisión')"><i class="fa-solid fa-tv"></i><h3>Televisión</h3><p>100W</p></div>
-            <div class="item" onclick="toggle(this, 150, 'Nevera')"><i class="fa-solid fa-snowflake"></i><h3>Frigorífico</h3><p>150W (Continuo)</p></div>
-            <div class="item" onclick="toggle(this, 1000, 'Bomba Agua')"><i class="fa-solid fa-faucet"></i><h3>Bomba Agua</h3><p>1000W</p></div>
-            <div class="item" onclick="toggle(this, 2200, 'Lavadora')"><i class="fa-solid fa-tshirt"></i><h3>Lavadora</h3><p>2200W</p></div>
-            <div class="item" onclick="toggle(this, 1500, 'Aire Ac.')"><i class="fa-solid fa-wind"></i><h3>Aire Cond.</h3><p>1500W</p></div>
-            <div class="item" onclick="toggle(this, 1200, 'Microondas')"><i class="fa-solid fa-cookie"></i><h3>Microondas</h3><p>1200W</p></div>
-            <div class="item" onclick="toggle(this, 2500, 'Horno/Vitro')"><i class="fa-solid fa-fire-burner"></i><h3>Horno/Vitro</h3><p>2500W</p></div>
-            <div class="item" onclick="toggle(this, 800, 'Piscina')"><i class="fa-solid fa-person-swimming"></i><h3>Depuradora</h3><p>800W</p></div>
-            <div class="item" onclick="toggle(this, 65, 'Laptop')"><i class="fa-solid fa-laptop"></i><h3>Laptop/Móvil</h3><p>65W</p></div>
+            <div class="item" onclick="toggle(this, 50)"><i class="fa-solid fa-lightbulb"></i><h3>Luces LED</h3><p>50W total</p></div>
+            <div class="item" onclick="toggle(this, 100)"><i class="fa-solid fa-tv"></i><h3>Televisión</h3><p>100W</p></div>
+            <div class="item" onclick="toggle(this, 150)"><i class="fa-solid fa-snowflake"></i><h3>Frigorífico</h3><p>150W (Cont.)</p></div>
+            <div class="item" onclick="toggle(this, 1000)"><i class="fa-solid fa-faucet"></i><h3>Bomba Agua</h3><p>1000W</p></div>
+            <div class="item" onclick="toggle(this, 2200)"><i class="fa-solid fa-tshirt"></i><h3>Lavadora</h3><p>2200W</p></div>
+            <div class="item" onclick="toggle(this, 1500)"><i class="fa-solid fa-wind"></i><h3>Aire Cond.</h3><p>1500W</p></div>
+            <div class="item" onclick="toggle(this, 1200)"><i class="fa-solid fa-cookie"></i><h3>Microondas</h3><p>1200W</p></div>
+            <div class="item" onclick="toggle(this, 2500)"><i class="fa-solid fa-fire-burner"></i><h3>Horno/Vitro</h3><p>2500W</p></div>
+            <div class="item" onclick="toggle(this, 800)"><i class="fa-solid fa-person-swimming"></i><h3>Depuradora</h3><p>800W</p></div>
+            <div class="item" onclick="toggle(this, 65)"><i class="fa-solid fa-laptop"></i><h3>Laptop/Móvil</h3><p>65W</p></div>
         </div>
 
         <div class="result-box">
@@ -80,6 +81,7 @@
             document.getElementById('totalW').innerText = currentW + " W";
             const res = document.getElementById('packResult');
             let pack = "";
+            let info = "";
             let desc = "";
 
             if (currentW === 0) {
@@ -87,16 +89,42 @@
                 return;
             }
 
-            if (currentW <= 400) { pack = "AX10L / AX19L"; desc = "Ideal para iluminación y ocio básico."; }
-            else if (currentW <= 1000) { pack = "AX30L"; desc = "Perfecto para pequeñas herramientas o batidoras."; }
-            else if (currentW <= 3000) { pack = "AX70 / AX170"; desc = "Hogar estándar (Nevera + Lavadora en frío)."; }
-            else if (currentW <= 5000) { pack = "AX270L / AX370L"; desc = "Vivienda completa con gran consumo diurno."; }
-            else if (currentW <= 7200) { pack = "AX490L / AX590"; desc = "Independencia total (Piscina, Aire y Cocina)."; }
-            else { pack = "SISTEMA A MEDIDA"; desc = "Exceso de potencia simultánea para packs estándar."; }
+            if (currentW <= 400) { 
+                pack = "AX10L / AX19L"; 
+                desc = "Ideal para iluminación y ocio básico.";
+            }
+            else if (currentW <= 1000) { 
+                pack = "AX30L"; 
+                desc = "Perfecto para pequeñas herramientas o batidoras.";
+            }
+            else if (currentW <= 3000) { 
+                pack = "AX70 / AX170"; 
+                desc = "Hogar estándar (Nevera + Lavadora en frío).";
+            }
+            else if (currentW <= 5000) { 
+                pack = "PACK ZERO AX270L / AX370L"; 
+                info = "AX270L (5.499€) - Ref: 90769260<br>AX370L (6.990€) - Ref: 98777984";
+                desc = "Vivienda completa con gran consumo diurno.";
+            }
+            else if (currentW <= 7200) { 
+                pack = "PACK ZERO AX390L / AX495L"; 
+                info = "AX390L (7.499€) - Ref: 90769261<br>AX495L (10.490€) - Ref: 98777985";
+                desc = "Independencia total (Piscina, Aire y Cocina).";
+            }
+            else if (currentW <= 14400) {
+                pack = "PACK ZERO AX790L";
+                info = "AX790L (15.990€) - Ref: 98777986";
+                desc = "Máxima potencia. Inversor de 14.4kW y 30kWh batería.";
+            }
+            else { 
+                pack = "SISTEMA A MEDIDA"; 
+                desc = "Exceso de potencia simultánea para packs estándar."; 
+            }
 
             res.innerHTML = `
                 <div class="pack-card">
-                    <span class="pack-name">${pack}</span>
+                    <span class="pack-name"><i class="fa-solid fa-box-open"></i> ${pack}</span>
+                    ${info ? `<span class="pack-info">${info}</span>` : ''}
                     <span class="pack-desc">${desc}</span>
                 </div>
             `;
