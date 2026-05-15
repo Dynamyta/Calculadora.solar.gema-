@@ -1,0 +1,2 @@
+# Calculadora.solar.gema-
+Solar 
